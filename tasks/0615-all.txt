@@ -1,0 +1,4 @@
+All members work on 
+	finding entities 
+	defining relations between entities
+	drawing ERD
