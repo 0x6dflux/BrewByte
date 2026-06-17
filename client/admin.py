@@ -4,14 +4,14 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
 from client.models.customـuser import CustomUser
-from client.models import address, customer_profile, manager_profile, picture
+from client.models import address, picture
 
 
 # Register your models here.
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ("phone_number","username","first_name", "last_name")
+        fields = ("phone_number","username","first_name","last_name")
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
@@ -26,7 +26,7 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ("username", "phone_number","first_name", "last_name", "email", "user_code")
     fieldsets = (
         (None, {"fields": ("phone_number","username", "first_name", "last_name", "password")}),
-        ("Personal info", {"fields": ( "email", "user_code")}),
+        ("Personal info", {"fields": ("email","user_code","national_id","birth_date","graduated_date")}),
         (
             "Permissions",
             {
