@@ -6,6 +6,9 @@ class CustomUser(AbstractUser):
     user_code = models.CharField(max_length=20, unique=True, blank=True)
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
+    national_id = models.CharField(max_length=10, blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    graduated_date = models.DateField(blank=True, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name=("groups"),
