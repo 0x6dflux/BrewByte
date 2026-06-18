@@ -29,13 +29,15 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("client/", include("client.urls")),
-    # path("", include("general.urls")),
+    path("home/", include("general.urls"), name="home"),
+    path("",lambda _: redirect("general:home")),
     # path("sale/", include("sale.urls")),
     # path("activity/", include("activity.urls")),
 ]
