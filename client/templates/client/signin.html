@@ -1,13 +1,13 @@
-{% extends "config/base.html" %}
+{% extends "general/base.html" %}
 
 {% block page_title %}Sign In{% endblock page_title %}
 
 {% block body %}
-
-<form method='POST'>
+<h2>Sign In</h2>
+<form method="POST">
     {% csrf_token %}
-    {{ signin_form.as_p }}
+    {{ form.as_p }}
     <button type="submit">Sign In</button>
 </form>
-
+<p>Don't have an account? <a href="{% url 'client:signup' %}">Sign Up</a></p>
 {% endblock body %}

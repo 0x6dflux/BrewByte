@@ -1,13 +1,12 @@
-{% extends "config/base.html" %}
+{% extends "general/base.html" %}
 
-{% block page_title %}{{ User_first_name }} Profile{% endblock page_title %}
+{% block page_title %}{{ user.first_name }} Profile{% endblock page_title %}
 
 {% block body %}
-
-<form method='POST'>
+<h2>Edit Profile</h2>
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ profile_form.as_p }}
+    {{ form.as_p }}
     <button type="submit">Save Changes</button>
 </form>
-
 {% endblock body %}

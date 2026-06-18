@@ -1,8 +1,8 @@
 from django.db import models
 
 from general.models import BaseModel
-from sale.models import CartModel
-
+#from sale.models import CartModel
+from sale.models.cart_model import CartModel
 # import ProductModel
 
 

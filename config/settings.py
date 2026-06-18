@@ -27,22 +27,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#AUTH_USER_MODEL = 'client.CustomUser'
 AUTH_USER_MODEL = 'client.CustomUser'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'sale.apps.SaleConfig',
-    'client.apps.ClientConfig',
-    'inventory.apps.InventoryConfig',
-    'activity.apps.ActivityConfig',
-    'general.apps.GeneralConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "client.apps.ClientConfig",
+    "general.apps.GeneralConfig",
+    # "sale.apps.SaleConfig",
+    # "activity.apps.ActivityConfig",
 ]
 
 MIDDLEWARE = [
