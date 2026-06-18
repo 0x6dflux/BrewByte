@@ -1,0 +1,25 @@
+{% extends "general/base.html" %}
+
+{% block page_title %}Home{% endblock page_title %}
+
+{% block body %}
+<h2>Home</h2>
+<form method="POST">
+    {% csrf_token %}
+    {% for category in categories %}
+        <p>{{category.name}}</p>
+        {% for product in products %}
+            {% if product.category == category.name %}
+            <p>----{{product.name}}</p>
+            <p>----Ingredients: {{product.ingredients}}</p>
+            <p name="price" value={{product.price}}>----Price: {{product.price}}</p>
+            <p>----Sale Stock: {{product.sale_stock}}</p>
+            <p>----<input type="number" name={{product.id}}></p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock body %}
