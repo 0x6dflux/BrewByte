@@ -14,8 +14,7 @@ class SignUpForm(forms.ModelForm):
             'phone_number',
             'first_name',
             'last_name',
-            'birth_date',
-            'national_id',
+            'birthday',
         ]
 
     def clean_phone_number(self):
@@ -27,7 +26,7 @@ class SignUpForm(forms.ModelForm):
         return phone
 
     def clean_birth_date(self):
-        birth_date = self.cleaned_data.get('birth_date')
+        birth_date = self.cleaned_data.get('birthday')
         if not birth_date:
             raise forms.ValidationError('تاریخ تولد اجباری است.')
         return birth_date

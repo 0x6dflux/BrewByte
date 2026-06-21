@@ -1,12 +1,13 @@
 from django.db import models
-from client.models import CustomUser
+from client.models import CustomerProfile, ManagerProfile
 
 class Address(models.Model):
     name = models.CharField(max_length=50)
     postal_address = models.CharField(max_length=200)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE , blank=True, null=True)
+    customerprofile_id = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE , blank=True, null=True)
+    managerprofile_id = models.ForeignKey(ManagerProfile, on_delete=models.CASCADE , blank=True, null=True)
     
 
     

@@ -7,7 +7,7 @@ CustomUser = get_user_model()
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'phone_number', 'birth_date']
+        fields = ['first_name', 'last_name', 'phone_number', 'birthday']
 
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
