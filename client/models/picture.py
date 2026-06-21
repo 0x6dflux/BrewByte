@@ -1,6 +1,7 @@
 from django.db import models
-from client.models import CustomUser
+from client.models import CustomerProfile, ManagerProfile
 
 class Picture(models.Model):
     file_path = models.FilePathField(null=True, blank=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE , blank=True, null=True)
+    customerprofile_id = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE , blank=True, null=True)
+    managerprofile_id = models.ForeignKey(ManagerProfile, on_delete=models.CASCADE , blank=True, null=True)

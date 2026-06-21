@@ -3,25 +3,25 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from client.models.customـuser import CustomUser
+from client.models.user import User
 from client.models import address, picture
 
 
 # Register your models here.
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model = User
         fields = ("phone_number","username","first_name","last_name")
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
-        model = CustomUser
+        model = User
         fields = "__all__"
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
-    model = CustomUser
+    model = User
     list_display = ("username", "phone_number", "first_name", "last_name", "user_code", "is_staff")
     search_fields = ("username", "phone_number","first_name", "last_name", "email", "user_code")
     fieldsets = (
@@ -53,7 +53,7 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
-admin.site.register(CustomUser,CustomUserAdmin)
+admin.site.register(User,CustomUserAdmin)
 # admin.site.register(customer_profile.CustomerProfile,manager_profile.ManagerProfile,)
 
 # admin.site.register(address.Address,picture.Picture,)
