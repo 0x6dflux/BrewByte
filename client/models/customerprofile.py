@@ -1,8 +1,11 @@
 from django.db import models
-from client.models import User
+from django.contrib.auth import get_user_model
 
-class CustomerProfile(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+from general.models import BaseModel
+AUTH_USER = get_user_model
+
+class CustomerProfile(BaseModel):
+    user_id = models.OneToOneField(AUTH_USER, on_delete=models.CASCADE)
     customer_id = models.CharField(max_length=10 , blank=True, null=True)
     first_visit_date = models.DateField(blank=True, null=True)
     last_visit_date = models.DateField(blank=True, null=True)

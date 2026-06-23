@@ -22,16 +22,17 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ("username", "phone_number", "first_name", "last_name", "user_code", "is_staff")
+    list_display = ("username", "phone_number", "first_name", "last_name", "user_code", "is_staff", "is_customer")
     search_fields = ("username", "phone_number","first_name", "last_name", "email", "user_code")
     fieldsets = (
         (None, {"fields": ("phone_number","username", "first_name", "last_name", "password")}),
-        ("Personal info", {"fields": ("email","user_code","national_id","birth_date","graduated_date")}),
+        ("Personal info", {"fields": ("email","user_code", "birthday")}),
         (
             "Permissions",
             {
                 "fields": (
                     "is_active",
+                    "is_customer"
                     "is_staff",
                     "is_superuser",
                     "groups",
