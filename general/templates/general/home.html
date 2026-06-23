@@ -3,20 +3,72 @@
 {% block page_title %}Home{% endblock page_title %}
 
 {% block body %}
-<h2>Home</h2>
-<form method="POST">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        {% if user.is_authenticated %}
+        <p class="dropdown-toggle m-0 p-3" role="button" data-bs-toggle="dropdown">{{ user.first_name }}</p>
+        <ul class="dropdown-menu">
+            <li class="dropdown-item">My Orders</li>
+            <li class="dropdown-item">Discounts</li>
+            <li class="dropdown-item"><a href="{% url 'client:profile_edit' %}">Edit Profile</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'client:signout' %}">Sign Out</a></li>
+        </ul>
+        {% else %}
+        <a href="{% url 'client:signin' %}" class="p-3">Sign In</a>
+        <a href="{% url 'client:signup' %}" class="p-3">Sign Up</a>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="nav-link dropdown-toggle p-3" href="" role="button" data-bs-toggle="dropdown">Cart</a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">List of products added to the card</li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Create Order</a></li>
+                <li><a class="dropdown-item" href="#">Clear Cart</a></li>
+            </ul>
+            <form class="d-flex m-0 p-3" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+{% if user.is_authenticated %}
+<hr>
+<p>List of Favorites</p>
+<hr>
+{% endif %}
+
+<div class="d-flex">
+    <p class="px-3">Categories:</p>
+    {% for category in categories %}
+    <a class="px-3" href="#{{ category.name }}">{{ category.name }}</a>
+    {% endfor %}
+</div>
+<hr>
+
+<form action="{% url 'general:home' %}" method="POST">
     {% csrf_token %}
     {% for category in categories %}
-        <p>{{category.name}}</p>
-        {% for product in products %}
-            {% if product.category == category.name %}
-            <p>----{{product.name}}</p>
-            <p>----Ingredients: {{product.ingredients}}</p>
-            <p name="price" value={{product.price}}>----Price: {{product.price}}</p>
-            <p>----Sale Stock: {{product.sale_stock}}</p>
-            <p>----<input type="number" name={{product.id}}></p>
-            {% endif %}
-        {% endfor %}
+    <p id="{{ category.name }}">{{category.name}}</p>
+    {% for product in products %}
+    {% if product.category == category.name %}
+    <p>----{{product.name}}</p>
+    <p>----Ingredients: {{product.ingredients}}</p>
+    <p name="price" value={{product.price}}>----Price: {{product.price}}</p>
+    <p>----Sale Stock: {{product.sale_stock}}</p>
+    <p>----<input type="number" name={{product.id}}></p>
+    {% endif %}
+    {% endfor %}
     {% endfor %}
 
     <button type="submit">Submit</button>
