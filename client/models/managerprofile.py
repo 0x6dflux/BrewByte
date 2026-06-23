@@ -1,8 +1,11 @@
 from django.db import models
-from client.models import User
+from django.contrib.auth import get_user_model
 
-class ManagerProfile(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+from general.models import BaseModel
+AUTH_USER = get_user_model
+
+class ManagerProfile(BaseModel):
+    user_id = models.OneToOneField(AUTH_USER, on_delete=models.CASCADE, blank=True, null=True)
     employee_id = models.CharField(max_length=10, blank=True, null=True)
     national_code = models.CharField(max_length=10, blank=True, null=True)
     emergency_contact_name = models.CharField(max_length=150, blank=True, null=True)

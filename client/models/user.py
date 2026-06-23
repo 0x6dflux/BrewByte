@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-class User(AbstractUser):
+from general.models import BaseModel
+
+class User(AbstractUser, BaseModel):
     phone_number = models.CharField(max_length=14, unique=True)
     user_code = models.CharField(max_length=20, unique=True, blank=True)
     first_name = models.CharField(max_length=150, blank=False)
