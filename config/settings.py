@@ -33,10 +33,11 @@ AUTH_USER_MODEL = "client.User"
 # Application definition
 
 INSTALLED_APPS = [
-    "client.apps.ClientConfig",
     "general.apps.GeneralConfig",
+    "client.apps.ClientConfig",
     "sale.apps.SaleConfig",
-    # "activity.apps.ActivityConfig",
+    "activity.apps.ActivityConfig",
+    "inventory.apps.InventoryConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

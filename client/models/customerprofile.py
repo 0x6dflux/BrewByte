@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 from general.models import BaseModel
-AUTH_USER = get_user_model
+AUTH_USER = get_user_model()
 
 class CustomerProfile(BaseModel):
     user_id = models.OneToOneField(AUTH_USER, on_delete=models.CASCADE)

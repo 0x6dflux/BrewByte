@@ -12,6 +12,7 @@ class SignUpForm(forms.ModelForm):
         model = CustomUser
         fields = [
             'phone_number',
+            'username',
             'first_name',
             'last_name',
             'birthday',
