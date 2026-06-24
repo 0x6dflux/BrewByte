@@ -9,7 +9,7 @@ AUTH_USER = get_user_model()
 
 
 class NotificationModel(BaseModel):
-    responsible_user_id = models.ForeignKey(AUTH_USER, models.CASCADE)
+    responsible_user_id = models.ForeignKey(AUTH_USER, models.CASCADE, related_name="notification_responsible_user_id")
     order_id = models.ForeignKey(OrderModel, models.CASCADE, null=True, blank=True)
     comment_id = models.ForeignKey(CommentModel, models.CASCADE, null=True, blank=True)
     description = models.TextField()

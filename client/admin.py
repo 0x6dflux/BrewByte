@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
 from client.models.user import User
-from client.models import address, picture
+from client.models import address, client_picture
 
 
 # Register your models here.
