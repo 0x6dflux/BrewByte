@@ -75,3 +75,22 @@
 </form>
 
 {% endblock body %}
+
+{% block domready %}
+console.log('domready');
+const numberInput = document.querySelector('input[name="1"]');
+
+numberInput.addEventListener('input', (event) => {
+    console.log("Value changed to:", event.target.value);
+    text1 = document.cookie;
+    text2 = '';
+    console.log(typeof(text1));
+    console.log(typeof(text2));
+    {}
+    text3 = text2.concat(text1, ';number=8');
+    document.cookie = text3;
+    console.log(text1);
+    console.log(text3);
+});
+
+{% endblock %}
