@@ -13,3 +13,6 @@ class CustomerProfile(BaseModel):
     loyalty_points = models.IntegerField(default=0, db_default=0)
     referral_code = models.CharField(max_length=10,blank=True, null=True)
     is_active = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.user_id}-customer-profile"
