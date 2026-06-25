@@ -18,6 +18,9 @@ class OrderModel(BaseModel):
     tax = models.DecimalField(max_digits=10, decimal_places=1)
     taxed_amount = models.DecimalField(max_digits=10, decimal_places=1)
 
+    def __str__(self) -> str:
+        return f"OR{self.pk}-{self.user_id.first_name}-{self.user_id.last_name}"
+
 
 class OrderItemModel(BaseModel):
     order_id = models.ForeignKey(OrderModel, models.CASCADE)
@@ -25,3 +28,6 @@ class OrderItemModel(BaseModel):
     quantity = models.DecimalField(max_digits=10, decimal_places=1)
     price = models.DecimalField(max_digits=10, decimal_places=1)
     amount = models.DecimalField(max_digits=10, decimal_places=1)
+
+    def __str__(self) -> str:
+        return f"OI{self.pk}-{self.product_id.name}"
