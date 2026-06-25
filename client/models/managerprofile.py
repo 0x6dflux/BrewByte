@@ -16,3 +16,6 @@ class ManagerProfile(BaseModel):
     certifications = models.TextField(blank=True, null=True)
     technical_skills = models.TextField(blank=True, null=True)
     is_active = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.user_id}-manager-profile"

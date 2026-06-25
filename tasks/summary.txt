@@ -9,9 +9,9 @@
 
 
 customer panel
-- sign up with phone number
-- send welcome message or email
-- set favorite products and to be added in the favorite list (quick access)
+- sign up with phone number *
+- send welcome message or email 
+- set favorite products and to be added in the favorite list (quick access) 
 - customer profile : change name, picture, and specially usernames
 - (phase2) submit orders
 - (phase2) submit comments on products
@@ -20,12 +20,25 @@ customer panel
 
 
 manager panel
-- add category
-- add product (define the product category)
-- filter orders by time and category
-- only users with manager role have access here
-- (phase2) see orders with notification panel ?!
-- (phase2) products and oreders lists shall have :
+- add category *
+- add product (define the product category) *
+- filter orders by time and category 
+- only users with manager role have access here *
+- (phase2) see orders with notification panel ?! 
+- (phase2) products and oreders lists shall have : 
 	picture, category, name, inventory_availability
 - (phase2) only comments with manager approval shall be shown
-- (phase2) products info (ingredients) to be added on the product registration
+- (phase2) products info (ingredients) to be added on the product registration*
+
+
+- send welcome message or email 
+- set favorite products and to be added in the favorite list (quick access) 
+- customer profile : change picture /product: change picture
+- (phase2) submit orders
+- (phase2) submit comments on products
+- (phase2) add a field to comments table that whether the product has been ordered or not
+- (phase2) score for products (1 to 5 with stars) or like and dislike
+- filter orders by time and category 
+-- (phase2) see orders with notification panel ?! 
+- add str method to models
+- (phase2) only comments with manager approval shall be shown
