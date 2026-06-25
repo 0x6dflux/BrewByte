@@ -43,35 +43,132 @@
 </nav>
 
 {% if user.is_authenticated %}
-<hr>
-<p>List of Favorites</p>
+<h1 class="mt-5 mb-3">Your Favorites</h1>
+<div class="row row-cols-1 row-cols-md-3">
+    {% for fav_product in user_favorite_products %}
+    <div class="col">
+        <div class="card">
+            <div class="row g-0">
+                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{fav_product.name}}"> -->
+                <div id="carousel{{fav_product.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/test1.png" class="d-block w-100" alt="{{fav_product.name}}">
+                        </div>
+                        <div class="carousel-item active">
+                            <img src="/test2.jpg" class="d-block w-100" alt="{{fav_product.name}}">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{fav_product.name}}</h5>
+                    <p class="card-text">{{fav_product.description}}</p>
+                    <p class="card-text">{{fav_product.price}}</p>
+                    <p class="card-text">{{fav_product.sale_stock}}</p>
+                    <div class="d-flex">
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
+                        <p class="m-2" id={{fav_product.id}}>0</p>
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 <hr>
 {% endif %}
 
 <div class="d-flex">
     <p class="px-3">Categories:</p>
     {% for category in categories %}
-    <a class="px-3" href="#{{ category.name }}">{{ category.name }}</a>
+    <a class="px-3" href="#{{ category.name.title }}">{{ category.name }}</a>
     {% endfor %}
 </div>
 <hr>
 
-<form action="{% url 'general:home' %}" method="POST">
-    {% csrf_token %}
-    {% for category in categories %}
-    <p id="{{ category.name }}">{{category.name}}</p>
+{% for category in categories %}
+<h1 class="mt-5 mb-3" id="{{ category.name.title }}">{{category.name}}</h1>
+<div class="row row-cols-1 row-cols-md-3">
     {% for product in products %}
-    {% if product.category == category.name %}
-    <p>----{{product.name}}</p>
-    <p>----Ingredients: {{product.ingredients}}</p>
-    <p name="price" value={{product.price}}>----Price: {{product.price}}</p>
-    <p>----Sale Stock: {{product.sale_stock}}</p>
-    <p>----<input type="number" name={{product.id}}></p>
+    {% if product.category_id == category %}
+    <div class="col">
+        <div class="card">
+            <div class="row g-0">
+                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{product.name}}"> -->
+                <div id="carousel{{product.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/test1.png" class="d-block w-100" alt="{{product.name}}">
+                        </div>
+                        <div class="carousel-item active">
+                            <img src="/test2.jpg" class="d-block w-100" alt="{{product.name}}">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{product.name}}</h5>
+                    <p class="card-text">{{product.description}}</p>
+                    <p class="card-text">{{product.price}}</p>
+                    <p class="card-text">{{product.sale_stock}}</p>
+                    <div class="d-flex">
+                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, 1)'>+</button>
+                        <p class="m-2" id={{product.id}}>0</p>
+                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, -1)'>-</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
     {% endfor %}
-    {% endfor %}
+</div>
+{% endfor %}
 
-    <button type="submit">Submit</button>
-</form>
+<br>
+
+<a href=''>Create Order</a>
+
 
 {% endblock body %}
+
+
+{% block js_block %}
+
+function card_quantity_handler(product_id, value) {
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange=function() {
+if (this.readyState == 4 && this.status == 200) {
+console.log(document.querySelectorAll(`[id="${product_id}"]`))
+document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
+element.innerHTML = this.responseText
+})
+}
+};
+xhttp.open("POST", "/home/", true);
+xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
+};
+
+{% endblock js_block %}
