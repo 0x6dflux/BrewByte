@@ -27,17 +27,33 @@ Including another URLconf
 #     path("admin/", admin.site.urls),
 # ]
 
-from django.contrib import admin
-from django.urls import path, include
-from django.shortcuts import redirect
+import json
+
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import include, path
+
+
+def test_view(request: HttpRequest):
+    print(request.POST)
+
+    print(request.body)
+    my_body = json.loads(request.body)
+    fname = my_body.get("fname")
+    lname = my_body.get("lname")
+
+    return HttpResponse(f"GoodBye {fname} {lname}")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("client/", include("client.urls")),
     path("home/", include("general.urls"), name="home"),
-    path("",lambda _: redirect("general:home")),
+    path("", lambda _: redirect("general:home")),
+    path("test/", test_view),
     # path("sale/", include("sale.urls")),
     # path("activity/", include("activity.urls")),
 ]

@@ -74,4 +74,19 @@
     <button type="submit">Submit</button>
 </form>
 
+<p id='test'>Hello</p>
+
 {% endblock body %}
+
+{% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("test").innerHTML = this.responseText;
+    }
+  };
+xhttp.open("POST", "/test/", true);
+xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+xhttp.send('{"fname":"Henry", "lname":"Ford"}');
+{% endblock js_block %}
