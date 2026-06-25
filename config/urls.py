@@ -38,14 +38,17 @@ from django.urls import include, path
 
 
 def test_view(request: HttpRequest):
-    print(request.POST)
+    # request.user if cart.active
 
     print(request.body)
     my_body = json.loads(request.body)
-    fname = my_body.get("fname")
-    lname = my_body.get("lname")
+    print(my_body)
+    product_id = my_body.get("product_id")
+    product_id_value = my_body.get("value")
+    print(product_id)
+    print(product_id_value)
 
-    return HttpResponse(f"GoodBye {fname} {lname}")
+    return HttpResponse(f"{product_id_value}")
 
 
 urlpatterns = [

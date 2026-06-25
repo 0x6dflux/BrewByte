@@ -45,6 +45,13 @@
 {% if user.is_authenticated %}
 <hr>
 <p>List of Favorites</p>
+<p>----{{products.0.name}}</p>
+<p>----Ingredients: {{products.0.ingredients}}</p>
+<p name="price" value={{products.0.price}}>----Price: {{products.0.price}}</p>
+<p>----Sale Stock: {{products.0.sale_stock}}</p>
+<p>----Quantity: <label id={{products.0.id}}>0</label></p>
+<button onclick='card_quantity_handler({{products.0.id}}, 1)'>+</button>
+<button onclick='card_quantity_handler({{products.0.id}}, -1)'>-</button>
 <hr>
 {% endif %}
 
@@ -56,30 +63,54 @@
 </div>
 <hr>
 
-<form action="{% url 'general:home' %}" method="POST">
-    {% csrf_token %}
-    {% for category in categories %}
-    <p id="{{ category.name }}">{{category.name}}</p>
-    {% for product in products %}
-    {% if product.category == category.name %}
+{% for category in categories %}
+<p id="{{ category.name }}">{{category.name}}</p>
+{% for product in products %}
+{% if product.category_id == category %}
     <p>----{{product.name}}</p>
     <p>----Ingredients: {{product.ingredients}}</p>
     <p name="price" value={{product.price}}>----Price: {{product.price}}</p>
     <p>----Sale Stock: {{product.sale_stock}}</p>
-    <p>----<input type="number" name={{product.id}}></p>
-    {% endif %}
-    {% endfor %}
-    {% endfor %}
+    <p>----Quantity: <label id={{product.id}}>0</label></p>
+    <button onclick='card_quantity_handler({{product.id}}, 1)'>+</button>
+    <button onclick='card_quantity_handler({{product.id}}, -1)'>-</button>
+{% endif %}
+{% endfor %}
+{% endfor %}
+<a href=''>Create Order</a>
 
-    <button type="submit">Submit</button>
-</form>
 
 <p id='test'>Hello</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {% for form in forms %}
+    {{ form.as_p }}
+    {% endfor %}
+    <button type="submit">Submit</button>
+</form>
 
 {% endblock body %}
 
 {% block js_block %}
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+function card_quantity_handler(product_id, value) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+        {% comment %} document.getElementById(product_id).innerHTML = this.responseText; {% endcomment %}
+        console.log(document.querySelectorAll(`[id="${product_id}"]`))
+        document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
+            element.innerHTML = this.responseText
+        })
+        }
+    };
+    xhttp.open("POST", "/test/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
+};
+
+{% comment %} const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -88,5 +119,5 @@ xhttp.onreadystatechange=function() {
   };
 xhttp.open("POST", "/test/", true);
 xhttp.setRequestHeader("X-CSRFToken", csrftoken);
-xhttp.send('{"fname":"Henry", "lname":"Ford"}');
+xhttp.send('{"fname":"{{user.first_name}}", "lname":"{{user.last_name}}"}'); {% endcomment %}
 {% endblock js_block %}
