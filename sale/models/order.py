@@ -18,6 +18,9 @@ class OrderModel(BaseModel):
     total_amount = models.DecimalField(max_digits=10, decimal_places=1)
     tax = models.DecimalField(max_digits=10, decimal_places=1)
     taxed_amount = models.DecimalField(max_digits=10, decimal_places=1)
+    is_active = models.BooleanField(default=True, db_default=True)
+    is_approved = models.BooleanField(default=False, db_default=False)
+
 
 
 class OrderItemModel(BaseModel):

@@ -11,6 +11,7 @@ AUTH_USER = get_user_model()
 class CartModel(BaseModel):
     user_id = models.ForeignKey(AUTH_USER, models.CASCADE)
     total_amount = models.DecimalField(max_digits=10, decimal_places=1)
+    is_active = models.BooleanField(default=True, db_default=True)
 
 
 class CartItemModel(BaseModel):

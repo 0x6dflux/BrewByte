@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from django.core.exceptions import 
 
 from general.models import BaseModel
+from client.models import CustomerProfile
 
 class User(AbstractUser, BaseModel):
     phone_number = models.CharField(max_length=14, unique=True)
@@ -15,11 +17,12 @@ class User(AbstractUser, BaseModel):
     REQUIRED_FIELDS = ["first_name", "last_name","username", "email"]
 
     def __str__(self):
-        return self.phone_number
+        return self.username
     
     def save(self, *args, **kwargs):
         self.set_user_id()
         super().save(*args, **kwargs)
+
 
     def set_user_id(self):
         if not self.user_code:
@@ -31,3 +34,9 @@ class User(AbstractUser, BaseModel):
                 new_seq = 1
         
             self.user_code = f"USR-{new_seq:04d}"
+
+    # def create_profile(self): 
+    #     if self.is_customer is True:
+    #         try:
+    #             customer_profile = CustomerProfile.objects.get(user_id = self.id)
+    #         except  
