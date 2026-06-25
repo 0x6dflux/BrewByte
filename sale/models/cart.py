@@ -2,8 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from general.models import BaseModel
-
-# import ProductModel
+from inventory.models import Product
 
 AUTH_USER = get_user_model()
 
@@ -14,7 +13,7 @@ class CartModel(BaseModel):
 
 
 class CartItemModel(BaseModel):
-    # product_id = models.ForeignKey(ProductModel)
+    product_id = models.ForeignKey(Product, models.CASCADE)
     cart_id = models.ForeignKey(CartModel, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=1)
     quantity = models.IntegerField()

@@ -3,9 +3,8 @@ from django.db import models
 
 from client.models import Address
 from general.models import BaseModel
+from inventory.models import Product
 from sale.models import CartModel, DiscountModel
-
-# import ProductModel
 
 AUTH_USER = get_user_model()
 
@@ -22,7 +21,7 @@ class OrderModel(BaseModel):
 
 class OrderItemModel(BaseModel):
     order_id = models.ForeignKey(OrderModel, models.CASCADE)
-    # product_id = models.ForeignKey(ProductModel, models.CASCADE)
+    product_id = models.ForeignKey(Product, models.CASCADE)
     quantity = models.DecimalField(max_digits=10, decimal_places=1)
     price = models.DecimalField(max_digits=10, decimal_places=1)
     amount = models.DecimalField(max_digits=10, decimal_places=1)
