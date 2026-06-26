@@ -1,11 +1,11 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 
 from activity.models import CommentModel
 from general.models import BaseModel
 from sale.models import OrderModel
 
-AUTH_USER = get_user_model()
+AUTH_USER = settings.AUTH_USER_MODEL
 
 
 class NotificationModel(BaseModel):

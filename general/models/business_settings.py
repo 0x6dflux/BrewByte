@@ -1,26 +1,28 @@
-from django.contrib.auth import get_user_model
 from django.db import models
+from django.conf import settings
 
 from general.models.base_model import BaseModel
 
-AUTH_USER = get_user_model()
+
+AUTH_USER = settings.AUTH_USER_MODEL
 
 
 class BusinessSetting(BaseModel):
-    deafult_comment_responsible_user_id = models.ForeignKey(
+    default_comment_responsible_user_id = models.ForeignKey(
         AUTH_USER,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="deafult_comment_responsible_user_id",
+        related_name="default_comment_responsible_user_id",
     )
-    deafult_notification_responsible_user_id = models.ForeignKey(
+    default_notification_responsible_user_id = models.ForeignKey(
         AUTH_USER,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="deafult_notification_responsible_user_id",
+        related_name="default_notification_responsible_user_id",
     )
+    default_tax_ratio = models.FloatField(default=10.0, db_default=10.0)
 
     def __str__(self) -> str:
         return f"BS{self.pk}"

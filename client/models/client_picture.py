@@ -1,14 +1,19 @@
 from django.db import models
+from django.conf import settings
 
-from client.models import CustomerProfile, ManagerProfile
 from general.models import BaseModel
-from django.contrib.auth import get_user_model
 
-AUTH_USER = get_user_model()
+AUTH_USER = settings.AUTH_USER_MODEL
+
 
 class ClientPicture(BaseModel):
-    file_path = models.FilePathField(null=True, blank=True)
-    user_id = models.ForeignKey(AUTH_USER, on_delete=models.CASCADE , blank=True, null=True)
+    file_path = models.ImageField(upload_to="clients/")
+    user_id = models.ForeignKey(
+        AUTH_USER,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.pk

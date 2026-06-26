@@ -1,9 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from general.models import BaseModel
-
-User = get_user_model()
 
 
 class Product(BaseModel):
@@ -14,7 +11,6 @@ class Product(BaseModel):
     inventory_stock = models.IntegerField(default=0)
     sale_stock = models.IntegerField(default=0)
     category_id = models.ForeignKey("inventory.Category", on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self) -> str:
         return f"{self.name}"
