@@ -1,10 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 
 from general.models import BaseModel
 from inventory.models import Product
 
-AUTH_USER = get_user_model()
+AUTH_USER = settings.AUTH_USER_MODEL
 
 
 class FavoriteModel(BaseModel):
