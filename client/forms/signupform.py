@@ -1,8 +1,8 @@
 import re
 from django import forms
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
-CustomUser = get_user_model()
+CustomUser = settings.AUTH_USER_MODEL
 
 
 class SignUpForm(forms.ModelForm):
