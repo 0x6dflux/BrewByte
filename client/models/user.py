@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 # from django.core.exceptions import 
 
 from general.models import BaseModel
-from client.models import CustomerProfile
+#from client.models import CustomerProfile
 
 class User(AbstractUser, BaseModel):
     phone_number = models.CharField(max_length=14, unique=True)
