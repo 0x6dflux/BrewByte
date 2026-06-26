@@ -12,7 +12,7 @@ def address_add_view(request):
         form = AddressForm(request.POST)
         if form.is_valid():
             address = form.save(commit=False)
-            address.user_id = request.user.id  
+            address.user_id = request.user 
             address.latitude = 0.0
             address.longitude = 0.0
             address.save()
@@ -34,7 +34,7 @@ def address_edit_view(request, id):
         form = AddressForm(request.POST, instance=address)
         if form.is_valid():
             address = form.save(commit=False)
-            address.user_id = request.user.id  
+            address.user_id = request.user 
             address.save()
             messages.success(request, "Address updated successfully.")
             return redirect('client:profile_edit')

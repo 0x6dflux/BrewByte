@@ -1,23 +1,39 @@
+from django.views import View
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
-from client.forms import ProfileForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from client.forms import UserProfileForm, ProfileDetailsForm
+from client.models import Address, CustomerProfile
 
+class ProfileEditView(LoginRequiredMixin, View):
+    
+    def get(self, request):
+        profile, created = CustomerProfile.objects.get_or_create(user_id=request.user)
+        user_form = UserProfileForm(instance=request.user)
+        profile_form = ProfileDetailsForm(instance=profile)
+        context = {
+            "user_form": user_form,
+            "profile_form": profile_form,
+            "addresses": Address.objects.filter(user_id=request.user),
+            "profile": profile,
+        }
+        return render(request, "client/profile.html", context)
 
-@login_required
-def profile_edit_view(request: HttpRequest) -> HttpResponse:
-    template_name = 'client/profile.html'
-    
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'پروفایل با موفقیت به‌روزرسانی شد!')
-            return redirect('home')  # تغییر از 'client:profile_edit' به 'home'
-        else:
-            messages.error(request, 'لطفاً خطاها را برطرف کنید.')
-    else:
-        form = ProfileForm(instance=request.user)
-    
-    return render(request, template_name, {'form': form})
+    def post(self, request):
+        profile, created = CustomerProfile.objects.get_or_create(user_id=request.user)
+        user_form = UserProfileForm(request.POST, instance=request.user)
+        profile_form = ProfileDetailsForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Changes saved successfully.")
+            return redirect("general:home")
+        
+        context = {
+            "user_form": user_form,
+            "profile_form": profile_form,
+            "addresses": Address.objects.filter(user_id=request.user),
+            "profile": profile,
+        }
+        return render(request, "client/profile.html", context)
