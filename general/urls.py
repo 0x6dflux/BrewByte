@@ -1,9 +1,7 @@
-from django.http import HttpResponse
-from django.urls import path, include
+from django.urls import path
 from general.views import HomeView
 
-app_name = 'general'
+app_name = "general"
 urlpatterns = [
-    path("", HomeView.as_view(), name="home" ),
-
+    path("", HomeView.as_view(), name="home"),
 ]

@@ -6,5 +6,5 @@ from django.contrib import messages
 def sign_out_view(request):
     """Handle user logout"""
     logout(request)
-    messages.success(request, 'شما با موفقیت از سیستم خارج شدید.')
-    return redirect('client:signin')
+    messages.success(request, "You Signed Out Successfully!")
+    return redirect("general:home")
