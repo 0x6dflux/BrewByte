@@ -1,9 +1,11 @@
-from django import forms
-from django.conf import settings
-from client.models import CustomerProfile
 import re
 
-CustomUser = settings.AUTH_USER_MODEL
+from django import forms
+from django.contrib.auth import get_user_model
+
+from client.models import CustomerProfile
+
+CustomUser = get_user_model()
 
 
 class ProfileForm(forms.ModelForm):
