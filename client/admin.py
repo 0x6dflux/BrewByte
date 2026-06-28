@@ -58,7 +58,8 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "is_active",
-                    "is_customeris_staff",
+                    "is_customer",
+                    "is_staff",
                     "is_superuser",
                     "groups",
                     "user_permissions",
