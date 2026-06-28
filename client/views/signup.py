@@ -19,12 +19,12 @@ class SignUpView(View):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
+            set_user_code(user)
             user.save()
 
             login(request, user)
             messages.success(request, "You Signed Up Successfully!")
 
-            set_user_code(user)
             create_customer_profile(user)
 
             # birth_date = user.birth_date
