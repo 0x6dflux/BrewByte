@@ -6,7 +6,7 @@ def set_user_code(user: User):
     if not user.user_code:
         while True:
             try:
-                last_user = User.objects.order_by("-id").first()
+                last_user = User.objects.filter(user_code__startswith="USR").order_by("-id").first()
                 if last_user and last_user.user_code:
                     last_seq = int(last_user.user_code.split("-")[-1])
                     new_seq = last_seq + 1
