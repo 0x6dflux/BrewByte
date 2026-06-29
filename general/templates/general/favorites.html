@@ -1,0 +1,42 @@
+<div id="favorites" class="row row-cols-1 row-cols-md-3">
+    {% for fav_product in user_favorite_products %}
+    <div class="col">
+        <div class="card">
+            <div class="row g-0">
+                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{fav_product.name}}"> -->
+                <div id="carousel{{fav_product.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for path_model in fav_product.productpicture_set.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{path_model.file_path.url}}" class="d-block w-100" alt="{{fav_product.name}}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{fav_product.name}}</h5>
+                    <p class="card-text">{{fav_product.description}}</p>
+                    <p class="card-text">{{fav_product.price}}</p>
+                    <p class="card-text">{{fav_product.sale_stock}}</p>
+                    <div class="d-flex">
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
+                        <p class="m-2" id={{fav_product.id}}>0</p>
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
+                        <button id="star_{{product.id}}" onclick="toggle_star({{fav_product}}, 1)" class="btn fs-1">🌟</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
