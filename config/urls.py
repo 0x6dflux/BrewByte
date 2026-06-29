@@ -38,7 +38,7 @@ urlpatterns = [
     path("client/", include("client.urls")),
     path("home/", include("general.urls"), name="home"),
     path("",lambda _: redirect("general:home")),
-    # path("sale/", include("sale.urls")),
+    path("sale/", include("sale.urls")),
     # path("activity/", include("activity.urls")),
 ]
 
