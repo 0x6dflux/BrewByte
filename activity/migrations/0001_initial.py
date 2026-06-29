@@ -4,50 +4,83 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CommentModel',
+            name="CommentModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('is_bought', models.BooleanField(db_default=False, default=False)),
-                ('description', models.TextField()),
-                ('score', models.IntegerField(choices=[(5, 'Great'), (4, 'Very Good'), (3, 'Good'), (2, 'Poor'), (1, 'Bad')])),
-                ('is_approved', models.BooleanField(db_default=False, default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("is_bought", models.BooleanField(db_default=False, default=False)),
+                ("description", models.TextField()),
+                (
+                    "score",
+                    models.IntegerField(
+                        choices=[
+                            (5, "Great"),
+                            (4, "Very Good"),
+                            (3, "Good"),
+                            (2, "Poor"),
+                            (1, "Bad"),
+                        ]
+                    ),
+                ),
+                ("is_approved", models.BooleanField(db_default=False, default=False)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='FavoriteModel',
+            name="FavoriteModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='NotificationModel',
+            name="NotificationModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('description', models.TextField()),
-                ('is_seen', models.BooleanField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("description", models.TextField()),
+                ("is_seen", models.BooleanField()),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]
