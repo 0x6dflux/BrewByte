@@ -56,6 +56,8 @@ class HomeView(View):
                 FavoriteModel(
                     user_id=current_user,
                     product_id=Product.objects.get(id=star_product_id),
+                    created_by=current_user,
+                    updated_by=current_user,
                 ).save()
                 return HttpResponse("🌟")
 
