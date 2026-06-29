@@ -78,7 +78,7 @@
                         <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
                         <p class="m-2" id={{fav_product.id}}>0</p>
                         <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
-                        <button id="star_{{product.id}}" onclick="toggle_star({{fav_product}}, 1)" class="btn fs-1">🌟</button>
+                        <button onclick="toggle_star({{fav_product.id}})" class="btn fs-1">🌟</button>
                     </div>
                 </div>
             </div>
