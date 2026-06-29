@@ -44,7 +44,7 @@
 
 {% if user.is_authenticated %}
 <h1 class="mt-5 mb-3">Your Favorites</h1>
-<div class="row row-cols-1 row-cols-md-3">
+<div id="favorites" class="row row-cols-1 row-cols-md-3">
     {% for fav_product in user_favorite_products %}
     <div class="col">
         <div class="card">
@@ -78,6 +78,7 @@
                         <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
                         <p class="m-2" id={{fav_product.id}}>0</p>
                         <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
+                        <button id="star_{{product.id}}" onclick="toggle_star({{fav_product}}, 1)" class="btn fs-1">🌟</button>
                     </div>
                 </div>
             </div>
@@ -88,7 +89,7 @@
 <hr>
 {% endif %}
 
-<div class="d-flex">
+<div class="d-flex mt-5 mb-3">
     <p class="px-3">Categories:</p>
     {% for category in categories %}
     <a class="px-3" href="#{{ category.name.title }}">{{ category.name }}</a>
@@ -133,6 +134,7 @@
                         <button class="m-2" onclick='card_quantity_handler({{product.id}}, 1)'>+</button>
                         <p class="m-2" id={{product.id}}>0</p>
                         <button class="m-2" onclick='card_quantity_handler({{product.id}}, -1)'>-</button>
+                        <button id="star_{{product.id}}" class="btn fs-1" onclick="toggle_star({{product.id}})">{% if product in user_favorite_products %}🌟{% else %}✩{% endif %}</button>
                     </div>
                 </div>
             </div>
@@ -152,21 +154,60 @@
 
 
 {% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function alert_not_signed_in_user() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            if (this.responseText != "OK") {
+                alert(this.responseText);
+            }
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"request":"user"}`);
+}
+
+function update_favorites() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("favorites").outerHTML =this.responseText;
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"update":"favorites"}`);
+}
+
+function toggle_star(product_id) {
+    var xhttp = new XMLHttpRequest();
+    alert_not_signed_in_user();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelector(`[id="star_${product_id}"]`).innerHTML = this.responseText;
+            update_favorites();
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"star_product_id":${product_id}}`);
+}
 
 function card_quantity_handler(product_id, value) {
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange=function() {
-if (this.readyState == 4 && this.status == 200) {
-console.log(document.querySelectorAll(`[id="${product_id}"]`))
-document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
-element.innerHTML = this.responseText
-})
-}
-};
-xhttp.open("POST", "/home/", true);
-xhttp.setRequestHeader("X-CSRFToken", csrftoken);
-xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
+                element.innerHTML = this.responseText
+            })
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
 };
 
 {% endblock js_block %}
