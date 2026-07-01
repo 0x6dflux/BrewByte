@@ -13,6 +13,7 @@ class DiscountModel(BaseModel):
     percent = models.IntegerField()
     max_amount = models.DecimalField(max_digits=10, decimal_places=1)
     order_min_amount = models.DecimalField(max_digits=10, decimal_places=1)
+    is_active = models.BooleanField(default=True, db_default=True)
 
     def __str__(self) -> str:
         return f"DC{self.pk}-{self.code}"

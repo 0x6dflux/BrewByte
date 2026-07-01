@@ -1,14 +1,13 @@
 from django.views import View
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from sale.models import OrderItemModel
+from client.models import Address
 from sale.services import CheckoutService
 from client.services import ClientCheckoutService
-from sale.utils import calculate_price
-import json
+from sale.utils import get_active_order
 
 
 class CreateOrder(LoginRequiredMixin, View):
@@ -35,25 +34,12 @@ class CreateOrder(LoginRequiredMixin, View):
         )
 
     def post(self, request):
-        my_body = json.loads(request.body)
+        if address_id := request.POST.get("address"):
+            order, _ = get_active_order(request.user)
+            address = Address.objects.get(id=address_id)
+            order.address_id = address
+            order.save()
+            return redirect("sale:finalize_order")
 
-        order_item_id = my_body.get("item_id")
-        value = int(my_body.get("value"))
-        if order_item_id and value:
-            order_item = OrderItemModel.objects.get(id=order_item_id)
-            if order_item.quantity + value >= 0:
-                order_item.quantity += value
-                order_item.save()
-            calculate_price(order_item.order_id)
-
-            return JsonResponse(
-                {
-                    "quantity": order_item.quantity,
-                    "amount": str(order_item.amount),
-                    "total_amount": str(order_item.order_id.total_amount),
-                    "discounted_amount": str(order_item.order_id.discounted_amount)
-                    or 0,
-                    "tax": str(order_item.order_id.tax),
-                    "taxed_amount": str(order_item.order_id.taxed_amount),
-                }
-            )
+        messages.error(request, "Please Select Address!")
+        return redirect("sale:create_order")

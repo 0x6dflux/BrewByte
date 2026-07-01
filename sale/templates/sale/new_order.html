@@ -244,7 +244,7 @@ function order_item_quantity_handler(item_id, value) {
             document.getElementById("taxed_amount").value = data.taxed_amount;
         }
     };
-    xhttp.open("POST", "/sale/order/new/", true);
+    xhttp.open("POST", "/sale/order/new/update_item/", true);
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
     xhttp.send(`{"item_id":${item_id}, "value" : ${value}}`);
 };

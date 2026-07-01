@@ -1,0 +1,253 @@
+{% extends "general/base.html" %}
+
+{% block page_title %}
+Finalize Order
+{% endblock page_title %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Finalize Order</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="row">
+
+            <!-- Order Items -->
+            <div class="col-md-8">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        Order Items
+                    </div>
+
+                    <div class="card-body p-0">
+
+                        <table class="table table-striped mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th width="120">Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in order_items %}
+                                <tr>
+
+                                    <td>{{ item.product_id.name }}</td>
+
+                                    <td>{{ item.price }}</td>
+
+                                    <td>{{ item.quantity }}</td>
+
+                                    <td>{{ item.amount }}</td>
+
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        No items found.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Summary -->
+            <div class="col-md-4">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        Order Summary
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- Address -->
+
+                        <div class="card mb-3">
+
+                            <div class="card-header">
+                                Delivery Address
+                            </div>
+
+                            <div class="card-body">
+
+                                <strong>{{ order.address_id.name }}</strong><br>
+
+                                {{ order.address_id.postal_address }}
+
+                            </div>
+
+                        </div>
+
+                        <!-- Discount -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Discount Code
+                            </label>
+
+                            <div class="input-group">
+                                <div id="discount_message"></div>
+                                <input
+                                    type="text"
+                                    id="discount_code"
+                                    class="form-control"
+                                    name="discount_code">
+
+                                <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    onclick="apply_order_discount({{order.id}}, document.getElementById('discount_code').value)"
+                                    name="action"
+                                    value="apply_discount">
+                                    Apply
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Totals -->
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Total Amount
+                            </label>
+
+                            <input
+                                class="form-control"
+                                value="{{ order.total_amount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Discount
+                            </label>
+
+                            <input
+                                class="form-control"
+                                id="discount"
+                                value="{{ order.discount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Discounted Amount
+                            </label>
+
+                            <input
+                                class="form-control"
+                                id="discounted_amount"
+                                value="{{ order.discounted_amount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Tax
+                            </label>
+
+                            <input
+                                class="form-control"
+                                id="tax"
+                                value="{{ order.tax }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Final Amount
+                            </label>
+
+                            <input
+                                class="form-control"
+                                id="taxed_amount"
+                                value="{{ order.taxed_amount }}"
+                                disabled>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                            name="action"
+                            value="pay">
+                            Pay
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock body %}
+
+{% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function apply_order_discount(order_id, code) {
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function () {
+
+        if (this.readyState !== 4)
+            return;
+
+        const data = JSON.parse(this.responseText);
+
+        if (this.status === 200) {
+
+            document.getElementById("discount_message").innerHTML = "";
+
+            document.getElementById("discount").value = data.discount;
+            document.getElementById("discounted_amount").value = data.discounted_amount;
+            document.getElementById("tax").value = data.tax;
+            document.getElementById("taxed_amount").value = data.taxed_amount;
+
+        } else {
+
+            document.getElementById("discount_message").innerHTML =
+                `<div class="alert alert-danger">${data.message}</div>`;
+        }
+    };
+
+    xhttp.open("POST", "/sale/order/finalize/discount/", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+
+    xhttp.send(JSON.stringify({
+        order_id: order_id,
+        code: code
+    }));
+}
+
+{% endblock js_block %}
