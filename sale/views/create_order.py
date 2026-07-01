@@ -44,7 +44,7 @@ class CreateOrder(LoginRequiredMixin, View):
             if order_item.quantity + value >= 0:
                 order_item.quantity += value
                 order_item.save()
-                calculate_price(order_item.order_id)
+            calculate_price(order_item.order_id)
 
             return JsonResponse(
                 {
