@@ -1,0 +1,261 @@
+{% extends "general/base.html" %}
+
+{% block page_title %}
+New Order
+{% endblock page_title %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">New Order</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="row">
+
+            <!-- Order Items -->
+            <div class="col-md-8">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        Order Items
+                    </div>
+
+                    <div class="card-body p-0">
+
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th width="170">Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in order_items %}
+                                <tr>
+
+                                    <td>{{ item.product_id.name }}</td>
+
+                                    <td>{{ item.price }}</td>
+
+                                    <td>
+
+                                        <div class="d-flex align-items-center">
+
+                                            <button
+                                                class="btn btn-outline-secondary btn-sm"
+                                                type="submit"
+                                                name="action"
+                                                value="decrease_{{ item.id }}">
+                                                -
+                                            </button>
+
+                                            <input
+                                                class="form-control mx-2 text-center"
+                                                style="width:60px"
+                                                value="{{ item.quantity }}"
+                                                disabled>
+
+                                            <button
+                                                id="item_{{item.id}}"
+                                                class="btn btn-outline-secondary btn-sm"
+                                                onclick=
+                                                type="submit"
+                                                name="action"
+                                                value="increase_{{ item.id }}">
+                                                +
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>{{ item.total_price }}</td>
+
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        No items found.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Summary -->
+            <div class="col-md-4">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        Order Summary
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Address
+                        </div>
+
+                        <div class="card-body">
+
+                            {% for address in addresses %}
+
+                                <div class="form-check border rounded p-3 mb-2">
+
+                                    <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="address"
+                                        id="address{{ address.id }}"
+                                        value="{{ address.id }}"
+                                        {% if order.address_id.id == address.id %}checked{% endif %}
+                                    >
+
+                                    <label
+                                        class="form-check-label w-100"
+                                        for="address{{ address.id }}"
+                                    >
+                                        <strong>{{ address.name }}</strong><br>
+
+                                        {{ address.postal_address }}<br>
+
+                                    </label>
+
+                                </div>
+
+                            {% empty %}
+
+                                <p>No address found.</p>
+
+                            {% endfor %}
+
+                            <a
+                                href="{% url 'client:address_add' %}"
+                                class="btn btn-outline-primary mt-2"
+                            >
+                                Add New Address
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Discount Code
+                        </label>
+
+                        <div class="input-group">
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="discount_code">
+
+                            <button
+                                class="btn btn-primary"
+                                type="submit"
+                                name="action"
+                                value="apply_discount">
+                                Apply
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Total Amount</label>
+                            <input
+                                class="form-control"
+                                value="{{ order.total_amount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Discount</label>
+                            <input
+                                class="form-control"
+                                value="{{ order.discount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Discounted Amount</label>
+                            <input
+                                class="form-control"
+                                value="{{ order.discounted_amount }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tax</label>
+                            <input
+                                class="form-control"
+                                value="{{ order.tax }}"
+                                disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Final Amount</label>
+                            <input
+                                class="form-control"
+                                value="{{ order.taxed_amount }}"
+                                disabled>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                            name="action"
+                            value="confirm_order">
+                            Finalize Order
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock body %}
+
+{% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function order_item_quantity_handler(product_id, value) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelector(`[id="item_${item_id}"]`).innerHTML = this.responseText
+            })
+        }
+    };
+    xhttp.open("POST", "/sale/order/new/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
+};
+
+{% endblock js_block %}
