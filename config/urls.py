@@ -27,17 +27,18 @@ Including another URLconf
 #     path("admin/", admin.site.urls),
 # ]
 
-from django.contrib import admin
-from django.urls import path, include
-from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.shortcuts import redirect
+from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("inventory/", include("inventory.urls")),
     path("client/", include("client.urls")),
     path("home/", include("general.urls"), name="home"),
-    path("",lambda _: redirect("general:home")),
+    path("", lambda _: redirect("general:home")),
     # path("sale/", include("sale.urls")),
     # path("activity/", include("activity.urls")),
 ]
