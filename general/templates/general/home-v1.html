@@ -1,0 +1,228 @@
+{% extends "general/base.html" %}
+
+{% block page_title %}Home{% endblock page_title %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        {% if user.is_authenticated %}
+        <p class="dropdown-toggle m-0 p-3" role="button" data-bs-toggle="dropdown">{{ user.first_name }}</p>
+        <ul class="dropdown-menu">
+            <li class="dropdown-item">My Orders</li>
+            <li class="dropdown-item">Discounts</li>
+            <li class="dropdown-item"><a href="{% url 'client:profile_edit' %}">Edit Profile</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'client:signout' %}">Sign Out</a></li>
+        </ul>
+        {% else %}
+        <a href="{% url 'client:signin' %}" class="p-3">Sign In</a>
+        <a href="{% url 'client:signup' %}" class="p-3">Sign Up</a>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="nav-link dropdown-toggle p-3" href="" role="button" data-bs-toggle="dropdown">Cart</a>
+            <ul class="dropdown-menu">
+                <div id="cart">
+                    <li class="dropdown-item">Empty</li>
+                </div>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Create Order</a></li>
+                <li><a class="dropdown-item" href="#">Clear Cart</a></li>
+            </ul>
+            <form class="d-flex m-0 p-3" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+{% if user.is_authenticated %}
+<h1 class="mt-5 mb-3">Your Favorites</h1>
+<div id="favorites" class="row row-cols-1 row-cols-md-3">
+    {% for fav_product in user_favorite_products %}
+    <div class="col">
+        <div class="card">
+            <div class="row g-0">
+                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{fav_product.name}}"> -->
+                <div id="carousel{{fav_product.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for path_model in fav_product.productpicture_set.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{path_model.file_path.url}}" class="d-block w-100" alt="{{fav_product.name}}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{fav_product.id}}"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{fav_product.name}}</h5>
+                    <p class="card-text">{{fav_product.description}}</p>
+                    <p class="card-text">{{fav_product.price}}</p>
+                    <p class="card-text">{{fav_product.sale_stock}}</p>
+                    <div class="d-flex">
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
+                        <p class="m-2" id={{fav_product.id}}>0</p>
+                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
+                        <button onclick="toggle_star({{fav_product.id}})" class="btn fs-1">🌟</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<hr>
+{% endif %}
+
+<div class="d-flex mt-5 mb-3">
+    <p class="px-3">Categories:</p>
+    {% for category in categories %}
+    <a class="px-3" href="#{{ category.name.title }}">{{ category.name }}</a>
+    {% endfor %}
+</div>
+<hr>
+
+{% for category in categories %}
+<h1 class="mt-5 mb-3" id="{{ category.name.title }}">{{category.name}}</h1>
+<div class="row row-cols-1 row-cols-md-3">
+    {% for product in products %}
+    {% if product.category_id == category %}
+    <div class="col">
+        <div class="card">
+            <div class="row g-0">
+                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{product.name}}"> -->
+                <div id="carousel{{product.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for path_model in product.productpicture_set.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{path_model.file_path.url}}" class="d-block w-100" alt="{{fav_product.name}}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{product.name}}</h5>
+                    <p class="card-text">{{product.description}}</p>
+                    <p class="card-text">{{product.price}}</p>
+                    <p class="card-text">{{product.sale_stock}}</p>
+                    <div class="d-flex">
+                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, 1)'>+</button>
+                        <p class="m-2" id={{product.id}}>0</p>
+                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, -1)'>-</button>
+                        <button id="star_{{product.id}}" class="btn fs-1" onclick="toggle_star({{product.id}})">{% if product in user_favorite_products %}🌟{% else %}✩{% endif %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endfor %}
+
+<br>
+
+<a href=''>Create Order</a>
+
+
+{% endblock body %}
+
+
+{% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function alert_not_signed_in_user() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            if (this.responseText != "OK") {
+                alert(this.responseText);
+            }
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"request":"user"}`);
+}
+
+function update_favorites() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("favorites").outerHTML =this.responseText;
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"update":"favorites"}`);
+}
+
+function toggle_star(product_id) {
+    var xhttp = new XMLHttpRequest();
+    alert_not_signed_in_user();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelector(`[id="star_${product_id}"]`).innerHTML = this.responseText;
+            update_favorites();
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"star_product_id":${product_id}}`);
+}
+
+function update_cart() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("cart").outerHTML =this.responseText;
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"update":"cart"}`);
+}
+
+function card_quantity_handler(product_id, value) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
+                element.innerHTML = this.responseText
+            });
+            update_cart();
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
+};
+
+{% endblock js_block %}

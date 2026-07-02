@@ -27,7 +27,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <a class="nav-link dropdown-toggle p-3" href="" role="button" data-bs-toggle="dropdown">Cart</a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item">List of products added to the card</li>
+                <div id="cart"></div>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
@@ -44,48 +44,7 @@
 
 {% if user.is_authenticated %}
 <h1 class="mt-5 mb-3">Your Favorites</h1>
-<div id="favorites" class="row row-cols-1 row-cols-md-3">
-    {% for fav_product in user_favorite_products %}
-    <div class="col">
-        <div class="card">
-            <div class="row g-0">
-                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{fav_product.name}}"> -->
-                <div id="carousel{{fav_product.id}}" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for path_model in fav_product.productpicture_set.all %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img src="{{path_model.file_path.url}}" class="d-block w-100" alt="{{fav_product.name}}">
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{fav_product.id}}"
-                        data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{fav_product.id}}"
-                        data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{fav_product.name}}</h5>
-                    <p class="card-text">{{fav_product.description}}</p>
-                    <p class="card-text">{{fav_product.price}}</p>
-                    <p class="card-text">{{fav_product.sale_stock}}</p>
-                    <div class="d-flex">
-                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, 1)'>+</button>
-                        <p class="m-2" id={{fav_product.id}}>0</p>
-                        <button class="m-2" onclick='card_quantity_handler({{fav_product.id}}, -1)'>-</button>
-                        <button onclick="toggle_star({{fav_product.id}})" class="btn fs-1">🌟</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+<div id="favorites" class="row row-cols-1 row-cols-md-3"></div>
 <hr>
 {% endif %}
 
@@ -97,53 +56,7 @@
 </div>
 <hr>
 
-{% for category in categories %}
-<h1 class="mt-5 mb-3" id="{{ category.name.title }}">{{category.name}}</h1>
-<div class="row row-cols-1 row-cols-md-3">
-    {% for product in products %}
-    {% if product.category_id == category %}
-    <div class="col">
-        <div class="card">
-            <div class="row g-0">
-                <!-- <img src="/test.png" class="img-fluid rounded-start" alt="{{product.name}}"> -->
-                <div id="carousel{{product.id}}" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for path_model in product.productpicture_set.all %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img src="{{path_model.file_path.url}}" class="d-block w-100" alt="{{fav_product.name}}">
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
-                        data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
-                        data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{product.name}}</h5>
-                    <p class="card-text">{{product.description}}</p>
-                    <p class="card-text">{{product.price}}</p>
-                    <p class="card-text">{{product.sale_stock}}</p>
-                    <div class="d-flex">
-                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, 1)'>+</button>
-                        <p class="m-2" id={{product.id}}>0</p>
-                        <button class="m-2" onclick='card_quantity_handler({{product.id}}, -1)'>-</button>
-                        <button id="star_{{product.id}}" class="btn fs-1" onclick="toggle_star({{product.id}})">{% if product in user_favorite_products %}🌟{% else %}✩{% endif %}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-</div>
-{% endfor %}
+<div id="products"></div>
 
 <br>
 
@@ -168,19 +81,19 @@ function alert_not_signed_in_user() {
     xhttp.open("POST", "/home/", true);
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
     xhttp.send(`{"request":"user"}`);
-}
+};
 
-function update_favorites() {
+function update_content(content) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange=function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("favorites").outerHTML =this.responseText;
+            document.getElementById(content).outerHTML =this.responseText;
         }
     };
     xhttp.open("POST", "/home/", true);
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
-    xhttp.send(`{"update":"favorites"}`);
-}
+    xhttp.send(`{"update":"${content}"}`);
+};
 
 function toggle_star(product_id) {
     var xhttp = new XMLHttpRequest();
@@ -188,26 +101,60 @@ function toggle_star(product_id) {
     xhttp.onreadystatechange=function() {
         if (this.readyState == 4 && this.status == 200) {
             document.querySelector(`[id="star_${product_id}"]`).innerHTML = this.responseText;
-            update_favorites();
+            update_content("favorites");
         }
     };
     xhttp.open("POST", "/home/", true);
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
     xhttp.send(`{"star_product_id":${product_id}}`);
-}
+};
+
+function update_cart() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("cart").outerHTML =this.responseText;
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"update":"cart"}`);
+};
+
+{% comment %} function update_card(card_id, product_id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.querySelectorAll(`[id="${card_id}"]`).forEach(element => {
+                element.outerHTML = this.responseText
+            });
+        }
+    };
+    xhttp.open("POST", "/home/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(`{"update":"card", "product_id":${product_id}}`);
+}; {% endcomment %}
 
 function card_quantity_handler(product_id, value) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange=function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
+            {% comment %} document.querySelectorAll(`[id="${product_id}"]`).forEach(element => {
                 element.innerHTML = this.responseText
-            })
+            }); {% endcomment %}
+            document.querySelectorAll(`[id="card_${product_id}"]`).forEach(element => {
+                element.outerHTML = this.responseText
+            });
+            update_cart();
         }
     };
     xhttp.open("POST", "/home/", true);
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
     xhttp.send(`{"product_id":${product_id}, "value" : ${value}}`);
 };
+
+update_cart();
+update_content("favorites");
+update_content("products");
 
 {% endblock js_block %}
