@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 
 from general.models import BaseModel
@@ -12,9 +14,14 @@ class CartItemModel(BaseModel):
         null=True,
         blank=True,
     )
-    price = models.DecimalField(max_digits=10, decimal_places=1)
-    quantity = models.IntegerField()
-    amount = models.DecimalField(max_digits=10, decimal_places=1)  # price * quantity
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(db_default=0, default=0)
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        db_default=Decimal("0"),
+        default=Decimal("0"),
+    )  # price * quantity
 
     def __str__(self) -> str:
         return f"CI{self.pk}-{self.product_id.name}"

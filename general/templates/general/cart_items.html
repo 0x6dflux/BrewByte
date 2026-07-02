@@ -1,0 +1,5 @@
+<div id="cart">
+    {% for cart_item in cart_items %}
+    <li class="dropdown-item">{{ cart_item }} - {{ cart_item.quantity }}</li>
+    {% endfor %}
+</div>

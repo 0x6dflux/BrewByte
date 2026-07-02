@@ -1,0 +1,14 @@
+<div id="products">
+    {% for category in categories %}
+    <h1 class="mt-5 mb-3" id="{{ category.name.title }}">{{category.name}}</h1>
+    <div class="row row-cols-1 row-cols-md-3">
+        {% for product in content %}
+        {% if product.category_id == category %}
+
+        {% include "general/content.html" %}
+        
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>

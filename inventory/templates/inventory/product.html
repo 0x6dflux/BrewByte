@@ -1,0 +1,60 @@
+{% extends "general/base.html" %}
+
+{% block page_title %}Product Detail{% endblock page_title %}
+
+
+
+{% block body %}
+
+<h1 class="mt-5 mb-3">Product Overall Score</h1>
+<p>{{overall_score}}</p>
+
+<h1 class="mt-5 mb-3">Ingredients</h1>
+{% for ingredient in ingredients %}
+<p>{{ingredient}} : {{ingredient.weight}}</p>
+{% endfor %}
+
+<h1 class="mt-5 mb-3">Your Comment Matters to Us</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>Score</label>
+    <select name="score" id="">
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+    </select>
+    <br>
+    <label>Comment Description</label>
+    <input type="text" name="description" id="">
+    <br>
+    <input type="submit" name="" id="" value="Submit Comment">
+</form>
+
+<h1 class="mt-5 mb-3">Comments</h1>
+{% for comment in comments %}
+<p>{% for _ in '12345' %}{% if forloop.counter <= comment.score %}🌟{% else %}✩{% endif %}{% endfor %}</p>
+<p>{{comment.description}}</p>
+<hr>
+{% endfor %}
+
+{% endblock body %}
+
+
+
+{% comment %} {% block js_block %}
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+function submit_comment(product_id) {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange=function() {
+if (this.readyState == 4 && this.status == 200) {
+alert(this.responseText);
+}
+};
+xhttp.open("POST", `product/${product_id}/`, true);
+xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+xhttp.send(`{"score":score, "description":description}`);
+};
+{% endblock js_block %} {% endcomment %}
