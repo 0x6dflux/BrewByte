@@ -10,8 +10,9 @@ New Order
 
     <h2 class="mb-4">New Order</h2>
 
-    <form method="POST">
-        {% csrf_token %}
+    <form method="POST" id="orderForm">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="confirm_order">
 
         <div class="row">
 
@@ -41,7 +42,10 @@ New Order
                                 {% for item in order_items %}
                                 <tr>
 
-                                    <td>{{ item.product_id.name }}</td>
+                                    <td>
+                                        {{ item.product_id.name }}
+                                        <div id="{{ item.product_id.id }}_message"></div>
+                                    </td>
 
                                     <td>{{ item.price }}</td>
 
@@ -90,13 +94,13 @@ New Order
                             </tbody>
 
                         </table>
-
+                        
                     </div>
 
                 </div>
 
             </div>
-
+            
             <!-- Summary -->
             <div class="col-md-4">
 
@@ -105,7 +109,7 @@ New Order
                     <div class="card-header">
                         Order Summary
                     </div>
-
+                    <div id="address_message"></div>
                     <div class="card mb-3">
                         <div class="card-header">
                             Address
@@ -203,10 +207,9 @@ New Order
                         </div>
 
                         <button
-                            type="submit"
+                            type="button"
                             class="btn btn-success w-100"
-                            name="action"
-                            value="confirm_order">
+                            onclick="check_inventory()">
                             Finalize Order
                         </button>
 
@@ -248,5 +251,66 @@ function order_item_quantity_handler(item_id, value) {
     xhttp.setRequestHeader("X-CSRFToken", csrftoken);
     xhttp.send(`{"item_id":${item_id}, "value" : ${value}}`);
 };
+
+function check_inventory() {
+
+    // Clear previous messages
+    document.getElementById("address_message").innerHTML = "";
+
+    document.querySelectorAll("[id$='_message']").forEach(function(element) {
+        element.innerHTML = "";
+    });
+
+    // Get selected address
+    const selectedAddress = document.querySelector('input[name="address"]:checked');
+
+    if (!selectedAddress) {
+        document.getElementById("address_message").innerHTML =
+            `<div class="alert alert-danger">
+                Please select a delivery address.
+            </div>`;
+        return;
+    }
+
+    const order_id = {{ order.id }};
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function () {
+
+        if (this.readyState !== 4)
+            return;
+
+        const data = JSON.parse(this.responseText);
+
+        if (this.status === 200) {
+
+            // Inventory OK -> submit the original form
+            document.getElementById("orderForm").submit();
+
+        } else {
+
+
+            if (data.item_product_id) {
+
+                const itemMessage =
+                    document.getElementById(`${data.item_product_id}_message`);
+
+                if (itemMessage) {
+                    itemMessage.innerHTML =
+                        `<div class="alert alert-danger">${data.inventory_message}</div>`;
+                }
+            }
+        }
+    };
+
+    xhttp.open("POST", "/sale/order/new/check_inventory/", true);
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.send(JSON.stringify({
+        order_id: order_id
+    }));
+}
 
 {% endblock js_block %}

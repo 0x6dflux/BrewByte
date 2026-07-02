@@ -34,12 +34,9 @@ class CreateOrder(LoginRequiredMixin, View):
         )
 
     def post(self, request):
+        order, _ = get_active_order(request.user)
         if address_id := request.POST.get("address"):
-            order, _ = get_active_order(request.user)
             address = Address.objects.get(id=address_id)
             order.address_id = address
             order.save()
             return redirect("sale:finalize_order")
-
-        messages.error(request, "Please Select Address!")
-        return redirect("sale:create_order")
