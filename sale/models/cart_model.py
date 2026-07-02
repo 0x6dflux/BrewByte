@@ -12,7 +12,7 @@ class CartModel(BaseModel):
     user_id = models.ForeignKey(AUTH_USER, models.CASCADE)
     total_amount = models.DecimalField(
         max_digits=10,
-        decimal_places=1,
+        decimal_places=2,
         default=Decimal(0.0),
     )
     is_active = models.BooleanField(default=True, db_default=True)
