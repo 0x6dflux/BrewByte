@@ -11,7 +11,17 @@ from inventory.models import Ingredient, Product
 class ProductView(View):
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
         ingredients = Ingredient.objects.filter(product_id=id)
-        comments = CommentModel.objects.filter(product_id=id)
+        comments = CommentModel.objects.filter(product_id=id, is_approved=True)
+
+        comments_avg = CommentModel.objects.filter(
+            product_id=id,
+            is_approved=True,
+        ).aggregate(Avg("score"))
+
+        if comments_avg:
+            product = Product.objects.get(id=id)
+            product.average_score = comments_avg.get("score__avg")
+            product.save()
 
         return render(
             request,
@@ -38,12 +48,5 @@ class ProductView(View):
             description=description,
             score=score,
         ).save()
-
-        comments_avg = CommentModel.objects.filter(product_id=id).aggregate(
-            Avg("score")
-        )
-        product = Product.objects.get(id=id)
-        product.average_score = comments_avg.get("score__avg")
-        product.save()
 
         return redirect("inventory:product", id=id)
