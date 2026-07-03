@@ -16,4 +16,5 @@ def create_order_items(
         for cart_item in cart_items
     ]
     OrderItemModel.objects.bulk_create(order_items)
+
     return order_items

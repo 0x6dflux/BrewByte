@@ -7,6 +7,7 @@ from sale.utils import (
     create_order,
     create_order_items,
     deactivate_cart,
+    calculate_price,
 )
 
 
@@ -26,5 +27,7 @@ class CheckoutService:
             with transaction.atomic():
                 order = create_order(user, cart)
                 order_items = create_order_items(order, cart_items)
+                calculate_price(order)
+
                 deactivate_cart(cart)
         return order, order_items
