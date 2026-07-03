@@ -6,8 +6,10 @@
 
 {% block body %}
 
-<h1 class="mt-5 mb-3">Product Overall Score</h1>
-<p>{{overall_score}}</p>
+<h1 class="mt-5 mb-3">
+    Product Overall Score : {{overall_score}}
+    {% for _ in '12345' %}{% if forloop.counter <= overall_score %}🌟{% else %}✩{% endif %}{% endfor %}
+</h1>
 
 <h1 class="mt-5 mb-3">Ingredients</h1>
 {% for ingredient in ingredients %}
@@ -32,7 +34,7 @@
     <input type="submit" name="" id="" value="Submit Comment">
 </form>
 
-<h1 class="mt-5 mb-3">Comments</h1>
+<h1 class="mt-5 mb-3">Comments ({{comments.count}})</h1>
 {% for comment in comments %}
 <p>{% for _ in '12345' %}{% if forloop.counter <= comment.score %}🌟{% else %}✩{% endif %}{% endfor %}</p>
 <p>{{comment.description}}</p>
