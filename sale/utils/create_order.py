@@ -1,6 +1,7 @@
 from client.models import User
 from sale.models import OrderModel, CartModel
 from sale.utils import get_tax_ratio
+from decimal import Decimal
 
 
 def create_order(user: User, cart: CartModel) -> OrderModel:
@@ -11,7 +12,7 @@ def create_order(user: User, cart: CartModel) -> OrderModel:
         total_amount=cart.total_amount,
         discount=0,
         discounted_amount=cart.total_amount,
-        tax=cart.total_amount * tax_ratio,
-        taxed_amount=cart.total_amount * (1 + tax_ratio),
+        tax=cart.total_amount * Decimal(tax_ratio),
+        taxed_amount=cart.total_amount * Decimal(1 + tax_ratio),
     )
     return order
