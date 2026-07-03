@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
@@ -38,13 +39,11 @@ class ProductView(View):
             score=score,
         ).save()
 
-        comments = CommentModel.objects.filter(product_id=id)
-        scores_sum = 0
-        for comment in comments:
-            scores_sum += comment.score
-
+        comments_avg = CommentModel.objects.filter(product_id=id).aggregate(
+            Avg("score")
+        )
         product = Product.objects.get(id=id)
-        product.average_score = scores_sum / comments.count()
+        product.average_score = comments_avg.get("score__avg")
         product.save()
 
         return redirect("inventory:product", id=id)
