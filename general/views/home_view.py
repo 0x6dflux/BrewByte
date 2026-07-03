@@ -130,6 +130,7 @@ class HomeView(View):
                 created_by=request.user,
                 updated_by=request.user,
                 user_id=request.user,
+                is_active=True,
             )
 
             cart_item, is_cart_item_created = CartItemModel.objects.get_or_create(
